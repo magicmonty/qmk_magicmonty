@@ -13,9 +13,12 @@
 #define AUTO_SHIFT_TIMEOUT TAPPING_TERM
 #define AUTO_SHIFT_NO_SETUP
 
-// Thumb Combos
-#if defined (MIRYOKU_KLUDGE_THUMBCOMBOS)
-  #define COMBO_COUNT 8
-  #define COMBO_TERM 200
-  #define EXTRA_SHORT_COMBOS
+#ifdef OLED_ENABLE
+  #define SPLIT_LAYER_STATE_ENABLE
+  #define SPLIT_LED_STATE_ENABLE
+  #define SPLIT_MODS_ENABLE
+  #define SPLIT_OLED_ENABLE
+  #define OLED_TIMEOUT 60000
+  #define OLED_FONT_H "keyboards/crkbd/keymaps/magicmonty/glcdfont.c"
 #endif
+
