@@ -8,6 +8,7 @@
 #define U_SYM 5
 #define U_FUN 6
 
+#define MEDIA MO(U_MEDIA)
 #define U_MEDIA_ESC LT(U_MEDIA, KC_ESC)
 #define U_NAV_SPC LT(U_NAV, KC_SPC)
 #define U_SYM_ENT LT(U_SYM, KC_ENT)
