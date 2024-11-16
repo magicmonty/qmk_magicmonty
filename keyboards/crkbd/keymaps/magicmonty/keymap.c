@@ -12,6 +12,7 @@
 
 #include "keymap.h"
 #include "oled.h"
+#include "graphics.h"
 
 #include "quantum.h"
 #include "process_tap_dance.h"
@@ -182,87 +183,27 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 // OLED
 
-#define L_BASE U_BASE
-#define L_EXTRA 1 << U_EXTRA
-#define L_NAV 1 << U_NAV
-#define L_MEDIA 1 << U_MEDIA
-#define L_NUM 1 << U_NUM
-#define L_SYM 1 << U_SYM
-#define L_FUN 1 << U_FUN
-
-void render_layer_state(void) {
-  switch (layer_state) {
-    case 0:
-      switch (default_layer_state) {
-        case 1 << U_BASE:
-          oled_write_P(PSTR("SOUL!"), false);
-          break;
-        case L_EXTRA:
-          oled_write_P(PSTR("QWRTZ"), false);
-          break;
-        case L_NAV:
-          oled_write_P(PSTR(" NAV "), false);
-          break;
-        case L_MEDIA:
-          oled_write_P(PSTR("MEDIA"), false);
-          break;
-        case L_NUM:
-          oled_write_P(PSTR(" NUM "), false);
-          break;
-        case L_SYM:
-          oled_write_P(PSTR(" SYM "), false);
-          break;
-        case L_FUN:
-          oled_write_P(PSTR(" FUN "), false);
-          break;
-        default:
-          oled_write_P(PSTR("!!!!!"), false);
-          break;
-      }
-      break;
-    case L_NAV:
-      oled_write_P(PSTR(" NAV "), false);
-      break;
-    case L_MEDIA:
-      oled_write_P(PSTR("MEDIA"), false);
-      break;
-    case L_NUM:
-      oled_write_P(PSTR(" NUM "), false);
-      break;
-    case L_SYM:
-      oled_write_P(PSTR(" SYM "), false);
-      break;
-    case L_FUN:
-      oled_write_P(PSTR(" FUN "), false);
-      break;
-    case L_EXTRA:
-      oled_write_P(PSTR("QWRTZ"), false);
-      break;
-    default:
-      oled_write_P(PSTR("HAEH?"), false);
-      break;
-  }
-}
-
 oled_rotation_t oled_init_user(oled_rotation_t rotation) {
   return OLED_ROTATION_270;
 }
 
 bool oled_task_user(void) {
-  oled_set_cursor(0, 1);
-  render_logo();
-
-  if (is_keyboard_master()) {
-    oled_set_cursor(0, 5);
-    render_os(detected_host_os());
+  if (is_keyboard_left()) {
+    oled_set_cursor(0, 1);
+    render_layer(layer_state, default_layer_state);
+  } else {
+    oled_set_cursor(0, 1);
+    render_logo();
   }
 
-  oled_set_cursor(0, 8);
-  render_mod_status_gui_alt(get_mods() | get_oneshot_mods());
-  render_mod_status_ctrl_shift(get_mods() | get_oneshot_mods());
+  oled_set_cursor(0, 6);
+  render_mod_status(get_mods() | get_oneshot_mods());
 
-  oled_set_cursor(0, 14);
-  render_layer_state();
+  oled_set_cursor(0, 12);
+
+  if (is_keyboard_master()) {
+    render_os(detected_host_os());
+  }
 
   return false;
 }
@@ -319,34 +260,6 @@ void matrix_scan_user(void) {
     set_led(U_BASE, val);
   }
 };
-
-void oled_render_boot(bool bootloader) {
-  oled_clear();
-  oled_set_cursor(0, 0);
-  if (bootloader) {
-    oled_write_P(PSTR("     "), false);
-    oled_write_P(PSTR("     "), false);
-    oled_write_P(PSTR("     "), false);
-    oled_write_P(PSTR("WAIT "), false);
-    oled_write_P(PSTR("FOR  "), false);
-    oled_write_P(PSTR("FIRM-"), false);
-    oled_write_P(PSTR("WARE "), false);
-    oled_write_P(PSTR("     "), false);
-    oled_write_P(PSTR("     "), false);
-  } else {
-    oled_write_P(PSTR("  R  "), false);
-    oled_write_P(PSTR("  E  "), false);
-    oled_write_P(PSTR("  B  "), false);
-    oled_write_P(PSTR("  O  "), false);
-    oled_write_P(PSTR("  O  "), false);
-    oled_write_P(PSTR("  T  "), false);
-    oled_write_P(PSTR("  I  "), false);
-    oled_write_P(PSTR("  N  "), false);
-    oled_write_P(PSTR("  G  "), false);
-  }
-
-  oled_render_dirty(true);
-}
 
 bool shutdown_user(bool jump_to_bootloader) {
   if (jump_to_bootloader) {
