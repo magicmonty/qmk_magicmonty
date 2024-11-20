@@ -125,12 +125,12 @@ void render_os(os_variant_t detected_os) {
 }
 
 #define L_BASE U_BASE
-#define L_EXTRA 1 << U_EXTRA
-#define L_NAV 1 << U_NAV
 #define L_MEDIA 1 << U_MEDIA
-#define L_NUM 1 << U_NUM
+#define L_NAV 1 << U_NAV
 #define L_SYM 1 << U_SYM
+#define L_NUM 1 << U_NUM
 #define L_FUN 1 << U_FUN
+#define L_EXTRA 1 << U_EXTRA
 
 void render_layer(layer_state_t layer_state, layer_state_t default_layer_state) {
   switch (layer_state) {
